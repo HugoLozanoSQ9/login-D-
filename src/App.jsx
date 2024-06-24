@@ -22,20 +22,23 @@ export default function App() {
 
     try {
 
-     const userToken = JSON.stringify(await login({
+     const userToken = await login({
         email: data.email,
         password: data.password
-      }))
+      })
 
       setFocus("email")
       reset()
 
-      localStorage.setItem("Token", userToken)
-      setToken(userToken)
-
-      toast.success("Estas Logeado")
-
-
+      if(userToken.success){
+        toast.success("Estas Logeado")
+        localStorage.setItem("Token", JSON.stringify(userToken.data.token))
+        setToken(userToken)
+      }else{
+        toast.error("Usuario o contraseña incorrecta, intentalo nuevamente")
+      }
+      
+  
     } catch (error) {
       console.log("Error al iniciar sesión", error)
       alert("Error al iniciar sesión", error)
@@ -90,7 +93,7 @@ export default function App() {
 
               <input
 
-                type="text"
+                type="password"
                 placeholder="Ingresa tu password"
                 className={clsx("p-2 rounded text-black w-[60%]")}
                 required
